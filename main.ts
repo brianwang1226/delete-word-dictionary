@@ -13,12 +13,15 @@ import { join } from "node:path";
 const ENTRY = `Monday`;
 
 // Kit gate: 1-77 UTF-8 chars, not only whitespace, and exactly one word
-// (no spaces, nothing attached). Fail loudly instead of writing an entry
+// (no spaces, nothing attached). The word must also be plain letters:
+// the judge's criterion 5 demands one word, spelled correctly, with
+// nothing added around it — digits or punctuation would hand the win to
+// any clean one-word entry. Fail loudly instead of writing an entry
 // the judge would reject.
 const len = [...ENTRY].length;
 const words = ENTRY.trim().split(/\s+/).filter(Boolean);
-if (len < 1 || len > 77 || ENTRY.trim().length === 0 || words.length !== 1) {
-  console.error(`Entry rejected by local gate: ${len} chars, ${words.length} words (must be 1-77 chars, non-blank, exactly one word).`);
+if (len < 1 || len > 77 || ENTRY.trim().length === 0 || words.length !== 1 || !/^[A-Za-z]+$/.test(ENTRY)) {
+  console.error(`Entry rejected by local gate: ${len} chars, ${words.length} words (must be 1-77 chars, non-blank, exactly one plain word).`);
   process.exit(1);
 }
 
